@@ -3,6 +3,8 @@
 \usepackage{titling}
 \usepackage[style=ieee]{biblatex}
 \usepackage{hyperref}
+\usepackage{textcomp}
+\usepackage{tabularx}
 \hypersetup{
     colorlinks,
     citecolor=black,
@@ -25,28 +27,44 @@
 \tableofcontents
 \newpage
 \pagenumbering{arabic}
-
+\section{Preambolo}
+Grazie alla diffusione dell'\textit{Internet of Things} e con l'introduzione sul mercato di dispositivi come \textit{Amazon}\textregistered \textit{Echo}\texttrademark si sono resi disponibili al consumatore una moltitudine di prodotti \textit{smart} tra cui telecamere ip, videocitofoni e sensori di vario genere atti a "digitalizzare" la propria esperienza casalinga.
+Che si critichi o no la cosa, questa diffusione di dispositivi rende disponibile all'uomo tecnologie multimediali a basso prezzo.
+È esattamente in questo contesto che si inserisce il progetto \textit{\thetitle}, il quale si pone come obbiettivo la realizzazione di un sistema di gestione e registrazione per sistemi di sicurezza e/o videosorveglianza dei propri dispositivi \textit{smart} installati nella propria abitazione.
 \section{Introduzione}
-
 \subsection{Scopo}
 Il presente documento si riferisce alla definizione e descrizione delle informazioni necessarie per lo sviluppo del progetto \textit{\thetitle} e interessa tutte le entità che siano coinvolte nella progettazione, sviluppo e utilizzo dello stesso. Il documento viene redatto secondo le direttive espresse nel \textit{IEEE Recommended Paractice for Software Requirements Specifications} \cite{ieeestd830}, ovvero secondo lo standard \textit{IEEE Std 830-1998}.
 
 \subsection{Campo di applicazione}
+Il progetto nominato \textit{\thetitle} si inserice nel contesto odierno di forte sviluppo di tecnologie relative all'\textit{Internet of Things} e si pone come obbiettivo la gestione dei dispositivi \textit{smart} multimediali per scopi di monitoraggio e videosorveglianza della propria abitazione, nonché fornire dei metodi comuni di registrazione dei sopra menzionati dispositivi. \textit{\thetitle} non si interfaccerà utilizzando protocolli proprietari dei singoli produttori, ma utilizzerà protocolli comuni e di pubblico dominio di utilizzo, incluso, ma non limitato a, \textit{http, rtsp, udp}.
 \subsection{Definizioni, acronimi, abbreviazioni}
+Nel presente documento vengono spesso riportate abbreviazioni e acronimi comuni nel contesto di sviluppo del progetto. Di seguito vengono riportate le interpretazioni delle suddette abbreviazioni:
+\begin{center}
+    \begin{tabularx}{\linewidth}{c X}
+            IOT & Internet of Things, l'aggregazione in internet di dispositivi di poca capacità di calcolo destinati come controllori per determinati elettrodomestici o utilizzati come sensori (telecamere, termometri, microfoni etc). \\
+            Ipcam & Telecamera, spesso utilizzata per videosorveglianza, che rende disponibile verso l'esterno una interfaccia ip per la gestione della stessa e la visione dello stream video tramite un protocollo comune (rtsp, udp etc). \\
+            Stream & Flusso di dati di vario tipo (audio, video, audiovideo etc).
+    \end{tabularx}
+\end{center}
 \subsection{Riferimenti}
 \printbibliography[heading=none]
-\subsection{Vista d'insieme}
+\subsection{Vista d'insieme del documento}
+Il presente documento contiene le specifiche e le relative descrizioni dei requisiti del progetto \textit{\thetitle}. Il progetto viene inquadrato secondo quanto citato in questa sezione e si prosegue nella sezione successiva a descriverne la prospettiva e le funzionalità, nonché la caratterizzazione dei potenziali utenti, dei vincoli e delle dipendenze. Nella sezione \textit{\hyperref[sec:specifica]{Specifica dei requisiti}}, verranno spiegate le interfacce con l'esterno e i requisiti funzionali e non.
+Alla fine del documento viene proposto in \textit{\hyperref[sec:appendice]{Appendice}} un possibile utilizzo dei celeberrimi \textit{design pattern} \cite{designpatterns} noti per la programmazione ad oggetti del progetto.
 \section{Descrizione generale}
 \subsection{Prospettiva del prodotto}
+Il progetto \textit{\thetitle} 
 \subsection{Funzionalità del prodotto}
 \subsection{Caratteristiche degli utenti}
 \subsection{Vincoli e limiti}
 \subsection{Presupposti e dipendenze}
 \section{Specifica dei requisiti}
+\label{sec:specifica}
 \subsection{Interfacce con l'esterno}
 \subsection{Requisiti funzionali}
 \subsection{Requisiti non funzionali}
 \section{Appendice}
+\label{sec:appendice}
 
 
 \end{document}
