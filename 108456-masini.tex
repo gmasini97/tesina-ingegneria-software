@@ -5,6 +5,8 @@
 \usepackage{hyperref}
 \usepackage{textcomp}
 \usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{listings}
 \hypersetup{
     colorlinks,
     citecolor=black,
@@ -14,6 +16,11 @@
 }
 
 \addbibresource{108456-masini.bib}
+\graphicspath{ {./imgs/} }
+\lstset{
+  basicstyle=\small,
+  breaklines=true
+}
 
 \title{Progetto senza titolo}
 \author{Gabriele Masini \#108456}
@@ -28,7 +35,7 @@
 \newpage
 \pagenumbering{arabic}
 \section{Preambolo}
-Grazie alla diffusione dell'\textit{Internet of Things} e con l'introduzione sul mercato di dispositivi come \textit{Amazon}\textregistered \textit{Echo}\texttrademark si sono resi disponibili al consumatore una moltitudine di prodotti \textit{smart} tra cui telecamere ip, videocitofoni e sensori di vario genere atti a "digitalizzare" la propria esperienza casalinga.
+Grazie alla diffusione dell'\textit{Internet of Things} e con l'introduzione sul mercato di dispositivi come \textit{Amazon} \textit{Echo} si sono resi disponibili al consumatore una moltitudine di prodotti \textit{smart} tra cui telecamere ip, videocitofoni e sensori di vario genere atti a "digitalizzare" la propria esperienza casalinga.
 Che si critichi o no la cosa, questa diffusione di dispositivi rende disponibile all'uomo tecnologie multimediali a basso prezzo.
 È esattamente in questo contesto che si inserisce il progetto \textit{\thetitle}, il quale si pone come obbiettivo la realizzazione di un sistema di gestione e registrazione dei propri dispositivi \textit{smart} per il monitoraggio di un determinato ambiente.
 \section{Introduzione}
@@ -58,7 +65,7 @@ Alla fine del documento viene proposto in \textit{\hyperref[sec:appendice]{Appen
 \subsection{Prospettiva del prodotto}
 Il progetto \textit{\thetitle} è inteso come una applicazione \textit{stand alone} programmata in \textit{Java} che permetta di gestire una aggregazione di dispositivi atti a monitorare lo stato di uno o più ambienti (ad esempio: una abitazione, un ufficio, un parco etc). La applicazione è un programma che viene eseguito su una macchina \textit{Server} ed essa espone all'esterno una interfaccia web (\textit{http}) per l'interazione con l'utente; inoltre il programma presenta una interfaccia sul server di tipo "a riga di comando" per la gestione da parte dell'amministratore.
 
-La natura di Java permette che la applicazione sia \textit{cross-platform} in modo da supportare ambienti Microsoft\textregistered Windows\textregistered, Linux e macOS\textregistered. Anche se Java permette l'utilizzo della applicazione su piattaforme diverse, le uniche supportate ufficialmente dal progetto sono le 3 sopra citate con riferimento a macchine ad architettura \textit{x86} e \textit{amd64}.
+La natura di Java permette che la applicazione sia \textit{cross-platform} in modo da supportare ambienti Microsoft Windows, Linux e macOS. Anche se Java permette l'utilizzo della applicazione su piattaforme diverse, le uniche supportate ufficialmente dal progetto sono le 3 sopra citate con riferimento a macchine ad architettura \textit{x86} e \textit{amd64}.
 
 Il software utilizza un database MariaDB per la memorizzazione dei dati degli utenti e delle risorse. Questo servizio database deve essere installato sulla macchina stessa del server o comunque essere da esso accessibile tramite la rete internet.
 Per quanto concerne l'elaborazione degli \textit{stream} audio e video, l'applicazione si avvale del progetto \textit{ffmpeg}.
@@ -75,18 +82,95 @@ All'interfaccia http avranno accesso gli utenti abilitati a visionare in \textit
 
 L'interfaccia via riga di comando è riservata al solo amministratore del sistema. Anch'essa richiede l'inserimento di una password d'amministratore per evitare eventuali manomissioni.
 
-La gerarchia di dispositivi è gestita sottoforma di albero, ovvero ogni dispositivo può essere aggregato in un gruppi che può a sua volta appartenere ad un'altro gruppo. Non sono ammesse relazioni ricorsive tra gruppi. Tutti i gruppi/dispositivi sono figli (diretti o indiretti) di un gruppo radice. Gli utenti con i giusti permessi e l'amministratore possono gestire la gerarchia, operando spostamenti, rinomine, cancellazioni e aggiunte di dispositivi e gruppi.
+La gerarchia di dispositivi è gestita sottoforma di albero, ovvero ogni dispositivo può essere aggregato in un gruppi che può a sua volta appartenere ad un'altro gruppo. Non sono ammesse relazioni ricorsive tra gruppi. Tutti i gruppi/dispositivi sono figli (diretti o indiretti) di un gruppo radice. In \hyperref[fig:gerarchia]{figura \ref{fig:gerarchia}} si può osservare un esempio di organizzazione gerarchica di dispositivi e gruppi.
+
+Gli utenti con i giusti permessi e l'amministratore possono gestire la gerarchia, operando spostamenti, rinomine, cancellazioni e aggiunte di dispositivi e gruppi.
 
 Per ogni gruppo è sufficiente memorizzarne solamente il nome e una descrizione.
 
 Per ogni dispositivo invece è necessario memorizzarne il nome, una descrizione e il percorso dove salvare le registrazioni. Inoltre l'utente può specificare anche una operazione intermedia, che per dispositivi audio-video può essere una operazione di transcodifica (utilizzando quindi ffmpeg) da un formato ad un altro oppure, nel caso di sensori con risultati numerici, una formula matematica (ad esempio il sensore restituisce i gradi su scala Celsius, ma l'utente vuole memorizzare i gradi in scala Kelvin).
+
+\begin{figure}[h]
+    \caption{Esempio di una possibile gerarchia di dispositivi (nei rettangoli) e gruppi (negli ovali)}
+    \centering
+    \includegraphics[width=\textwidth]{1-gerarchia}
+    \label{fig:gerarchia}
+\end{figure}
+
 \subsection{Caratteristiche degli utenti}
+Gli utenti che si interfacceranno con l'applicazione sono l'amministratore e gli utenti generali. L'amministratore ha completo accesso su tutte le parti della applicazione (sia nell'interfaccia web, sia nell'interfaccia a riga di comando). Gli utenti generali avranno dei determinati permessi a loro assegnati per l'utilizzo dell'interfaccia web.
+
+L'utente amministratore deve avere un ottimo grado di dimestichezza con la macchina \textit{Server} su cui configura l'applicazione, sia dal punto di vista del sistema operativo, sia in campo di reti e telecomunicazione, sia nell'ottica di configurazione di programmi via riga di comando, sia, infine, in campo di formati multimediali audio-video. È sufficiente un diploma di tecnico/perito informatico; è consigliata una laurea in campo informatico.
+
+Gli utenti generali sono, invece, di tipo eterogeneo. È comunque necessario che essi sappiano utilizzare un \textit{personal computer} nelle sue funzioni ad altissimo livello (nel senso di comprendere le interfacce grafiche e la loro navigazione) dimodoché siano in grado di utilizzare un \textit{browser web} per l'accesso all'applicazione. Per essi non sono necessarie competenze avanzate in campo di informatica, ma sono consigliate.
 \subsection{Vincoli e limiti}
+L'applicazione è limitata e/o vincolata nel suo funzionamento da:
+\begin{itemize}
+    \item La memoria massima di archiviazione dei dati.
+    \item Il numero di thread o core del processore e/o la potenza di calcolo della GPU.
+    \item Le funzioni e i metodi che \textit{ffmpeg} mette a disposizione.
+    \item La banda massima supportata dalla connessione ad internet, nonché la banda massima della rete locale.
+    \item Le politiche di privacy necessarie per memorizzare dati basilari di utenti (e-mail, username e password).
+    \item La presenza sul server di una \textit{Java Virtual Machine}.
+    \item La presenza sul client di un \textit{browser web}
+\end{itemize}
 \subsection{Presupposti e dipendenze}
+Il progetto dipende dai progetti \textit{MariaDB} e \textit{ffmpeg}, utilizza il protocollo ip e i protocolli che si appoggiano ad esso (http, udp, rtsp etc) e supporta solo macchine \textit{x86} e \textit{amd64} con sistema operativo Microsoft Windows, Linux, maxOS. I browser supportati dall'interfaccia web sono Microsoft Edge, Apple Safari, Mozilla Firefox, Google Chrome (e suoi derivati, es: Chromium, Opera etc).
+Queste dipendenze possono portare al cambiamento del presente documento e, di conseguenza, all'applicazione.
+\subsection{Requisiti futuri}
+In futuro può essere necessario supportare più protocolli e più dispositivi. Può essere utile implementare una comunicazione tra l'applicazione e sistemi di \textit{smart home} come Amazon Echo.
 \section{Specifica dei requisiti}
 \label{sec:specifica}
 \subsection{Interfacce con l'esterno}
+
+\begin{center}
+    \begin{tabularx}{\linewidth}{|l|l|X|}
+        \hline
+            EI01 & Database & Gerarchia dispositivi \\
+        \hline
+            Descrizione & \multicolumn{2}{X|}{L'applicazione riceve in formato JSON la lista di dispositivi, gruppi e la loro organizzazione gerarchica.} \\
+        \hline
+            Formato dati & \multicolumn{2}{X|}{
+                \begin{lstlisting}{language=JSON}^^J
+                    \{^^J
+                        \{^^J
+                            "nome": "dispositivo 1",^^J
+                            "configurazione": \{^^J
+                                ...^^J
+                            \}^^J
+                        \},^^J
+                        \{^^J
+                            "nome": "gruppo 1",^^J
+                            "children": \{^^J
+                                \{^^J
+                                    "nome": "dispositivo 2",^^J
+                                    "configurazione": \{^^J
+                                        ...^^J
+                                    \}^^J
+                                \}^^J
+                            \}^^J
+                        \}^^J
+                    \}^^J
+                \end{lstlisting}
+            } \\
+        \hline
+    \end{tabularx}
+    
+\end{center}
+
 \subsection{Requisiti funzionali}
+
+\begin{center}
+    \begin{tabularx}{\linewidth}{|l|l|X|}
+        \hline
+            RF01 & Subsys & Func \\
+        \hline
+            Input & \multicolumn{2}{l|}{input descr} \\
+        \hline
+            Output & \multicolumn{2}{l|}{input descr} \\
+        \hline
+    \end{tabularx}
+\end{center}
 \subsection{Requisiti non funzionali}
 \section{Appendice}
 // design pattern
