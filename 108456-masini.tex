@@ -7,6 +7,9 @@
 \usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{comment}
+\usepackage{nameref}
+\usepackage{float}
 \hypersetup{
     colorlinks,
     citecolor=black,
@@ -22,7 +25,54 @@
   breaklines=true
 }
 
-\title{Progetto senza titolo}
+\newcommand{\srsdbname}{CouchDB}
+\newcommand{\srsavlibname}{ffmpeg}
+\newcommand{\srsnomeprogetto}{Progetto Senza Titolo}
+\newcommand{\srsrtcol}{0.18\linewidth}
+\newcommand{\srsrtcoll}{0.32\linewidth}
+\newcommand{\srsrtcolll}{0.32\linewidth}
+\newcommand{\srsrtmcol}{\the\dimexpr\srsrtcoll+\srsrtcolll+4\tabcolsep+2\arrayrulewidth}
+\newcommand{\srsninecelltable}[9]{
+    \begin{tabular}{|m{\srsrtcol}|m{\srsrtcoll}|m{\srsrtcolll}|}
+        \hline
+            #1 & #2 & #3 \\
+        \hline
+            #4 & \multicolumn{2}{m{\srsrtmcol}|}{#5} \\
+        \hline
+            #6 & \multicolumn{2}{m{\srsrtmcol}|}{#7} \\
+        \hline
+            #8 & \multicolumn{2}{m{\srsrtmcol}|}{#9} \\
+        \hline
+    \end{tabular}
+
+    \bigskip
+
+}
+\newcommand{\srsfivecelltable}[5]{
+    \begin{tabular}{|m{\srsrtcol}|m{\srsrtcoll}|m{\srsrtcolll}|}
+        \hline
+            #1 & #2 & #3 \\
+        \hline
+            #4 & \multicolumn{2}{m{\srsrtmcol}|}{#5} \\
+        \hline
+    \end{tabular}
+
+    \bigskip
+
+}
+\newcommand{\srseitable}[6]{
+    \srsninecelltable{EI#1}{#2}{#3}{Descrizione}{#4}{Formato dati}{#5}{Tipo}{#6}    
+}
+\newcommand{\srsfrtable}[6]{
+    \srsninecelltable{RF#1}{#2}{#3}{Input}{#4}{Processo}{#5}{Output}{#6}    
+}
+\newcommand{\srsnrtable}[4]{
+    \srsfivecelltable{RN#1}{#2}{#3}{Descrizione}{#4}    
+}
+
+\title{
+    \srsnomeprogetto\linebreak
+    \large Specifica dei requisiti di progetto}
 \author{Gabriele Masini \#108456}
 \date{2019-12-10}
 
@@ -37,58 +87,66 @@
 \section{Preambolo}
 Grazie alla diffusione dell'\textit{Internet of Things} e con l'introduzione sul mercato di dispositivi come \textit{Amazon} \textit{Echo} si sono resi disponibili al consumatore una moltitudine di prodotti \textit{smart} tra cui telecamere ip, videocitofoni e sensori di vario genere atti a "digitalizzare" la propria esperienza casalinga.
 Che si critichi o no la cosa, questa diffusione di dispositivi rende disponibile all'uomo tecnologie multimediali a basso prezzo.
-È esattamente in questo contesto che si inserisce il progetto \textit{\thetitle}, il quale si pone come obbiettivo la realizzazione di un sistema di gestione e registrazione dei propri dispositivi \textit{smart} per il monitoraggio di un determinato ambiente.
+È esattamente in questo contesto che si inserisce il progetto \textit{\srsnomeprogetto}, il quale si pone come obbiettivo la realizzazione di un sistema di gestione e registrazione dei propri dispositivi \textit{smart} per il monitoraggio di uno o più ambienti.
 \section{Introduzione}
 \subsection{Scopo}
-Il presente documento si riferisce alla definizione e descrizione delle informazioni necessarie per lo sviluppo del progetto \textit{\thetitle} e interessa tutte le entità coinvolte nella progettazione, sviluppo e utilizzo dello stesso. Il documento viene redatto secondo le direttive espresse nel \textit{IEEE Recommended Paractice for Software Requirements Specifications} \cite{ieeestd830}, ovvero secondo lo standard \textit{IEEE Std 830-1998}.
+Il presente documento si riferisce alla definizione e descrizione delle informazioni necessarie per lo sviluppo del progetto \textit{\srsnomeprogetto} e interessa tutte le entità coinvolte nella progettazione, sviluppo e utilizzo dello stesso. Il documento viene redatto secondo le direttive espresse nel \textit{IEEE Recommended Paractice for Software Requirements Specifications} \cite{ieeestd830}, ovvero secondo lo standard \textit{IEEE Std 830-1998}.
 \subsection{Campo di applicazione}
-Il progetto nominato \textit{\thetitle} si inserice nel contesto odierno di forte sviluppo di tecnologie relative all'\textit{Internet of Things} e si pone come obbiettivo la gestione dei dispositivi \textit{smart} multimediali per scopi di monitoraggio e videosorveglianza della propria abitazione, nonché di metodi comuni di registrazione dei sopra menzionati dispositivi. \textit{\thetitle} non si interfaccerà utilizzando protocolli proprietari dei singoli produttori, ma utilizzerà protocolli comuni e di pubblico dominio di utilizzo, incluso, ma non limitato a, \textit{http, rtsp, udp}.
+Il progetto nominato \textit{\srsnomeprogetto} si inserice nel contesto odierno di forte sviluppo di tecnologie relative all'\textit{Internet of Things} e si pone come obbiettivo la gestione dei dispositivi \textit{smart} multimediali per scopi di monitoraggio e videosorveglianza della propria abitazione, nonché di metodi comuni di registrazione dei sopra menzionati dispositivi. \textit{\srsnomeprogetto} non si interfaccerà utilizzando protocolli proprietari dei singoli produttori, ma utilizzerà protocolli comuni e di pubblico dominio di utilizzo, incluso, ma non limitato a, \textit{http, rtsp, udp}.
 \subsection{Definizioni, acronimi, abbreviazioni}
 Nel presente documento vengono spesso utilizzate abbreviazioni e acronimi comuni nel contesto di sviluppo del progetto. Di seguito vengono riportate le interpretazioni delle suddette abbreviazioni:
 \begin{center}
-    \begin{tabularx}{\linewidth}{c X}
-            IOT & "Internet of Things", l'aggregazione in internet di dispositivi di poca capacità di calcolo destinati come controllori per determinati elettrodomestici o utilizzati come sensori (telecamere, termometri, microfoni etc). \\
-            Ipcam & Telecamera, spesso utilizzata per videosorveglianza, che rende disponibile verso l'esterno una interfaccia ip per la gestione della stessa e la visione dello stream video tramite un protocollo comune (rtsp, udp etc). \\
-            Stream & Flusso di dati di vario tipo (audio, video, audio-video etc). \\
-            Server & Elaboratore che gestisce in modo centralizzato un insieme di dati e espone una interfaccia per interagire con più \textit{Client} tramite uno o più protocolli. \\
-            Client & Elaboratore che si collega ad un \textit{Server} per poter usufruire dei servizi da esso offerti. \\
-            Utente & Persona o ente che tramite un \textit{Client} utilizza l'applicazione. \\
-            Amministratore & Persona o ente responsabile del mantenimento del \textit{Server}. Spesso è anche un \textit{Client}.\\
+    \begin{tabularx}{\linewidth}{|l X|}
+        \hline
+        IOT & "Internet of Things", l'aggregazione in internet di dispositivi di poca capacità di calcolo destinati come controllori per determinati elettrodomestici o utilizzati come sensori (telecamere, termometri, microfoni etc). \\
+        \hline
+        Ipcam & Telecamera, spesso utilizzata per videosorveglianza, che rende disponibile verso l'esterno una interfaccia ip per la gestione della stessa e la visione dello stream video tramite un protocollo comune (rtsp, udp etc). \\
+        \hline
+        Stream & Flusso di dati di vario tipo (audio, video, audio-video etc). \\
+        \hline
+        Server & Elaboratore che gestisce in modo centralizzato un insieme di dati e espone una interfaccia per interagire con più \textit{Client} tramite uno o più protocolli. \\
+        \hline
+        Client & Elaboratore che si collega ad un \textit{Server} per poter usufruire dei servizi da esso offerti. \\
+        \hline
+        Utente & Persona o ente che tramite un \textit{Client} utilizza l'applicazione. \\
+        \hline
+        Amministratore & Persona o ente responsabile del mantenimento del \textit{Server}. Spesso è anche un \textit{Client}.\\
+        \hline
     \end{tabularx}
 \end{center}
 \subsection{Riferimenti}
 \printbibliography[heading=none]
 \subsection{Vista d'insieme del documento}
-Il presente documento contiene le specifiche e le relative descrizioni dei requisiti del progetto \textit{\thetitle}. Il progetto viene inquadrato secondo quanto citato in questa sezione e si prosegue nella sezione successiva a descriverne la prospettiva e le funzionalità, nonché la caratterizzazione dei potenziali utenti, dei vincoli e delle dipendenze. Nella sezione \textit{\hyperref[sec:specifica]{Specifica dei requisiti}}, verranno spiegate le interfacce con l'esterno e i requisiti funzionali e non.
-Alla fine del documento viene proposto in \textit{\hyperref[sec:appendice]{Appendice}} un possibile utilizzo dei celeberrimi \textit{design pattern} \cite{designpatterns} per la programmazione ad oggetti del progetto.
+Il presente documento contiene le specifiche e le relative descrizioni dei requisiti del progetto \textit{\srsnomeprogetto}. Il progetto viene inquadrato secondo quanto citato in questa sezione e si prosegue nella sezione successiva a descriverne la prospettiva e le funzionalità, nonché la caratterizzazione dei potenziali utenti, dei vincoli e delle dipendenze. Nella sezione \textit{\hyperref[sec:specifica]{Specifica dei requisiti}}, verranno spiegate le interfacce con l'esterno e i requisiti funzionali e non.
+Alla fine del documento, in \textit{\hyperref[sec:appendice]{Appendice}}, verranno inseriti diagrammi e grafici per integrare quanto detto nelle prossime sezioni, oltre a proporre un possibile utilizzo dei celeberrimi \textit{design pattern} \cite{designpatterns} per la programmazione ad oggetti del progetto.
 \section{Descrizione generale}
 \subsection{Prospettiva del prodotto}
-Il progetto \textit{\thetitle} è inteso come una applicazione \textit{stand alone} programmata in \textit{Java} che permetta di gestire una aggregazione di dispositivi atti a monitorare lo stato di uno o più ambienti (ad esempio: una abitazione, un ufficio, un parco etc). La applicazione è un programma che viene eseguito su una macchina \textit{Server} ed essa espone all'esterno una interfaccia web (\textit{http}) per l'interazione con l'utente; inoltre il programma presenta una interfaccia sul server di tipo "a riga di comando" per la gestione da parte dell'amministratore.
+Il progetto \textit{\srsnomeprogetto} è inteso come una applicazione \textit{stand alone} programmata in \textit{Java} che permetta di gestire una aggregazione di dispositivi atti a monitorare lo stato di uno o più ambienti (ad esempio: una abitazione, un ufficio, un parco etc). L'applicazione è un programma che viene eseguito su una macchina \textit{Server} ed essa espone all'esterno una interfaccia web (\textit{http}) per l'interazione con l'utente; inoltre il programma presenta una interfaccia sul server di tipo ``a riga di comando'' per la gestione da parte dell'amministratore.
 
+\begin{comment}
 La natura di Java permette che la applicazione sia \textit{cross-platform} in modo da supportare ambienti Microsoft Windows, Linux e macOS. Anche se Java permette l'utilizzo della applicazione su piattaforme diverse, le uniche supportate ufficialmente dal progetto sono le 3 sopra citate con riferimento a macchine ad architettura \textit{x86} e \textit{amd64}.
+\end{comment}
 
-Il software utilizza un database MariaDB per la memorizzazione dei dati degli utenti e delle risorse. Questo servizio database deve essere installato sulla macchina stessa del server o comunque essere da esso accessibile tramite la rete internet.
-Per quanto concerne l'elaborazione degli \textit{stream} audio e video, l'applicazione si avvale del progetto \textit{ffmpeg}.
-
-L'applicazione necessita di almeno una interfaccia di rete installata e configurata correttamente sulla macchina \textit{Server} per la comunicazione coi dispositivi da monitorare, l'accesso da parte dei \textit{Client} e la connessione al servizio di database (nel caso questo sia installato su una macchina remota).
+Il software utilizza un database \textit{nosql} per la memorizzazione dei dati degli utenti e delle risorse. Per quanto concerne l'elaborazione degli \textit{stream} audio e video, l'applicazione si avvale di una libreria esterna. L'applicazione necessita di almeno una interfaccia di rete installata e configurata correttamente sulla macchina \textit{Server} per la comunicazione coi dispositivi da monitorare, l'accesso da parte dei \textit{Client} e la connessione al servizio di database (nel caso questo sia installato su una macchina remota).
 
 Il \textit{Server} deve disporre di sufficiente spazio di archiviazione per la memorizzazione dei dati temporali dei vari dispositivi (ad esempio: registrazioni video, registrazioni audio, andamento dei sensori etc) per il periodo di mantenimento indicato dall'amministratore. Per completezza è disponibile anche l'archiviazione su server esterno via rete internet, anche se il suo utilizzo è sconsigliato per enti e privati che non dispongono di una banda larghissima in upload, la quale è necessaria per il trasporto di stream di grandi dimensioni come audio e video.
 
-Per aggregazioni di piccole dimensioni (il numero effettivo dei dispositivi audiovisivi dipende dal numero di elaborazioni intermedie e la risoluzione dei singoli dispositivi, in generale 15 è un buon compromesso) è sufficente disporre sul server di un processore \textit{multi core} per l'elaborazione intermedia degli stream audio-video (se necessaria). Per aggregazioni di grandi dimensioni è necessaria una scheda video Nvidia\textregistered che supporti l'elaborazione tramite CUDA e utilizzare la corretta versione di ffmpeg.
+Per aggregazioni di piccole dimensioni (il numero effettivo dei dispositivi audiovisivi dipende dal numero di elaborazioni intermedie e la risoluzione dei singoli dispositivi, in generale 15 è un buon compromesso) è sufficente disporre sul server di un processore \textit{multi core} per l'elaborazione intermedia degli stream audio-video (se necessaria). Per aggregazioni di grandi dimensioni è necessaria una scheda video Nvidia\textregistered che supporti l'elaborazione tramite CUDA e utilizzare la corretta versione di \srsavlibname.
+
 \subsection{Funzionalità del prodotto}
 La applicazione dovrà disporre di due interfacce separate, una accessibile tramite \textit{http} e una via riga di comando.
 
-All'interfaccia http avranno accesso gli utenti abilitati a visionare in \textit{real time} lo stato dei vari dispositivi, nonché accedere alle registrazioni. Ogni utente deve essere prima autenticato con apposite credenziali.
+All'interfaccia http avranno accesso gli utenti abilitati a visionare in \textit{real time} lo stato dei vari dispositivi, nonché accedere alle registrazioni. Ogni utente deve essere prima autenticato con apposite credenziali per poterne identificare i permessi di visualizzazione.
 
 L'interfaccia via riga di comando è riservata al solo amministratore del sistema. Anch'essa richiede l'inserimento di una password d'amministratore per evitare eventuali manomissioni.
 
-La gerarchia di dispositivi è gestita sottoforma di albero, ovvero ogni dispositivo può essere aggregato in un gruppi che può a sua volta appartenere ad un'altro gruppo. Non sono ammesse relazioni ricorsive tra gruppi. Tutti i gruppi/dispositivi sono figli (diretti o indiretti) di un gruppo radice. In \hyperref[fig:gerarchia]{figura \ref{fig:gerarchia}} si può osservare un esempio di organizzazione gerarchica di dispositivi e gruppi.
+La gerarchia dei dispositivi è gestita sotto forma di albero, ovvero ogni dispositivo può essere aggregato in un gruppo che può a sua volta appartenere ad un'altro gruppo. Non sono ammesse relazioni ricorsive tra gruppi. Tutti i gruppi/dispositivi sono figli (diretti o indiretti) di un gruppo radice. In \hyperref[fig:gerarchia]{figura \ref{fig:gerarchia}} si può osservare un esempio di organizzazione gerarchica di dispositivi e gruppi.
 
 Gli utenti con i giusti permessi e l'amministratore possono gestire la gerarchia, operando spostamenti, rinomine, cancellazioni e aggiunte di dispositivi e gruppi.
 
 Per ogni gruppo è sufficiente memorizzarne solamente il nome e una descrizione.
 
-Per ogni dispositivo invece è necessario memorizzarne il nome, una descrizione e il percorso dove salvare le registrazioni. Inoltre l'utente può specificare anche una operazione intermedia, che per dispositivi audio-video può essere una operazione di transcodifica (utilizzando quindi ffmpeg) da un formato ad un altro oppure, nel caso di sensori con risultati numerici, una formula matematica (ad esempio il sensore restituisce i gradi su scala Celsius, ma l'utente vuole memorizzare i gradi in scala Kelvin).
+Per ogni dispositivo invece è necessario memorizzarne il nome, una descrizione e il percorso dove salvare le registrazioni. Inoltre l'utente può specificare anche una operazione intermedia, che per dispositivi audio-video può essere una operazione di transcodifica (utilizzando quindi \srsavlibname) da un formato ad un altro oppure, nel caso di sensori con risultati numerici, una formula matematica (ad esempio il sensore restituisce i gradi su scala Celsius, ma l'utente vuole memorizzare i gradi in scala Kelvin).
 
 \begin{figure}[h]
     \caption{Esempio di una possibile gerarchia di dispositivi (nei rettangoli) e gruppi (negli ovali)}
@@ -108,14 +166,15 @@ L'applicazione è limitata e/o vincolata nel suo funzionamento da:
 \begin{itemize}
     \item La memoria massima di archiviazione dei dati.
     \item Il numero di thread o core del processore e/o la potenza di calcolo della GPU.
-    \item Le funzioni e i metodi che \textit{ffmpeg} mette a disposizione.
+    \item Le funzioni e i metodi che \textit{\srsavlibname} mette a disposizione.
     \item La banda massima supportata dalla connessione ad internet, nonché la banda massima della rete locale.
     \item Le politiche di privacy necessarie per memorizzare dati basilari di utenti (e-mail, username e password).
     \item La presenza sul server di una \textit{Java Virtual Machine}.
     \item La presenza sul client di un \textit{browser web}
 \end{itemize}
 \subsection{Presupposti e dipendenze}
-Il progetto dipende dai progetti \textit{MariaDB} e \textit{ffmpeg}, utilizza il protocollo ip e i protocolli che si appoggiano ad esso (http, udp, rtsp etc) e supporta solo macchine \textit{x86} e \textit{amd64} con sistema operativo Microsoft Windows, Linux, maxOS. I browser supportati dall'interfaccia web sono Microsoft Edge, Apple Safari, Mozilla Firefox, Google Chrome (e suoi derivati, es: Chromium, Opera etc).
+\label{sec:dipendenze}
+Il progetto dipende dai progetti \textit{\srsdbname} e \textit{\srsavlibname}, utilizza il protocollo ip e i protocolli che si appoggiano ad esso (http, udp, rtsp etc) e supporta solo macchine \textit{x86} e \textit{amd64} con sistema operativo Microsoft Windows, Linux, macOS. I browser supportati dall'interfaccia web sono Microsoft Edge, Apple Safari, Mozilla Firefox, Google Chrome (e suoi derivati, es: Chromium, Opera etc).
 Queste dipendenze possono portare al cambiamento del presente documento e, di conseguenza, all'applicazione.
 \subsection{Requisiti futuri}
 In futuro può essere necessario supportare più protocolli e più dispositivi. Può essere utile implementare una comunicazione tra l'applicazione e sistemi di \textit{smart home} come Amazon Echo.
@@ -124,58 +183,163 @@ In futuro può essere necessario supportare più protocolli e più dispositivi. 
 \subsection{Interfacce con l'esterno}
 
 \begin{center}
-    \begin{tabularx}{\linewidth}{|l|l|X|}
-        \hline
-            EI01 & Database & Gerarchia dispositivi \\
-        \hline
-            Descrizione & \multicolumn{2}{X|}{L'applicazione riceve in formato JSON la lista di dispositivi, gruppi e la loro organizzazione gerarchica.} \\
-        \hline
-            Formato dati & \multicolumn{2}{X|}{
-                \begin{lstlisting}{language=JSON}^^J
-                    \{^^J
-                        \{^^J
-                            "nome": "dispositivo 1",^^J
-                            "configurazione": \{^^J
-                                ...^^J
-                            \}^^J
-                        \},^^J
-                        \{^^J
-                            "nome": "gruppo 1",^^J
-                            "children": \{^^J
-                                \{^^J
-                                    "nome": "dispositivo 2",^^J
-                                    "configurazione": \{^^J
-                                        ...^^J
-                                    \}^^J
-                                \}^^J
-                            \}^^J
-                        \}^^J
-                    \}^^J
-                \end{lstlisting}
-            } \\
-        \hline
-    \end{tabularx}
+    \srseitable{01}{Database}{Gerarchia dispositivi}{L'applicazione riceve in formato JSON la lista di dispositivi, gruppi e la loro organizzazione gerarchica.}{Consultare \nameref{sec:appendice:ei01} in appendice per un esempio di JSON}{Input}
+
+    \srseitable{02}{Dispositivi}{Stream dati}{L'applicazione riceve dai dispositivi attivi uno stream di dati.}{Il formato dati dipende dal protocollo utilizzato dal dispositivo}{Input}
+
+    \srseitable{03}{Server}{Interfaccia web}{L'applicazione invia ai client le pagine HTML tramite http.}{HTML5 \cite{html5}, via http}{Output}
+    
+    \srseitable{04}{Client}{Interfaccia web}{L'applicazione riceve dai client le richieste tramite http.}{JSON, via http}{Input}
+    
+    \srseitable{05}{Server}{Riga di comando}{L'applicazione riceve i comandi da riga di comando}{ASCII}{Input}
+
+    \srseitable{06}{Server}{Archiviazione dati}{L'applicazione salva i dati nell'archivio}{Dati binari}{Output}
     
 \end{center}
 
 \subsection{Requisiti funzionali}
 
 \begin{center}
-    \begin{tabularx}{\linewidth}{|l|l|X|}
-        \hline
-            RF01 & Subsys & Func \\
-        \hline
-            Input & \multicolumn{2}{l|}{input descr} \\
-        \hline
-            Output & \multicolumn{2}{l|}{input descr} \\
-        \hline
-    \end{tabularx}
+    \srsfrtable{01}{Gestione elementi}{Aggiunta}{Nome iniziale dell'elemento}{Da web: l'utente clicca sul bottone ``aggiungi'', un popup chiede il nome iniziale, l'utente sceglie se annullare l'operazione o confermarla.\newline
+    Da riga di comando: l'utente scrive il comando apposito per aggiungere un elemento.}{L'elemento viene memorizzato sul database e viene visualizzato sulla interfaccia web o con il comando di elenco degli elementi.}
+
+    \srsfrtable{02}{Gestione elementi}{Modifica}{Dati aggiornati dell'elemento}{Da web: l'utente clicca con il tasto destro sull'elemento da modificare e sceglie ``modifica'', un popup chiede i dati, l'utente sceglie se annullare l'operazione o confermarla.\newline
+    Da riga di comando: l'utente scrive il comando apposito per modificare un elemento.}{L'elemento viene aggiornato sul database e viene aggiornato sulla interfaccia web e con il comando di elenco degli elementi.}
+
+    \srsfrtable{03}{Gestione elementi}{Eliminazione}{Elemento da eliminare}{Da web: l'utente clicca con il tasto destro l'elemento da eliminare e sceglie ``elimina''; un popup chiede conferma.\newline
+    Da riga di comando: l'utente scrive il comando apposito per eliminare un elemento.}{L'elemento viene eliminato sul database e le sue registrazioni vengono eliminate}
+
+    \srsfrtable{04}{Gestione elementi}{Assegnazione gruppo}{Elemento figlio e gruppo padre}{Da web: l'utente trascina l'\textit{handle} presente sopra l'elemento figlio e lo rilascia sul gruppo padre.\newline
+    Da riga di comando: l'utente scrive il comando apposito per assegnare un elemento figlio ad un gruppo padre.}{L'elemento padre dell'elemento figlio viene aggiornato e si aggiorna anche la vista sul web.}
+
+    \srsfrtable{06}{Gestione Elementi}{Visualizzazione}{Dispositivo da visualizzare}{Da web: l'utente clicca due volte sull'elemento da visualizzare.}{I dati vengono visualizzati.}
+
+    \srsfrtable{07}{Autenticazione utente}{Login}{Username e password}{Da web: l'utente clicca sul bottone ``login'', un popup chiede username e password, l'utente sceglie se annullare l'operazione o confermarla.}{Se username e password corretti l'utente accede al sistema.}
+
+    \srsfrtable{08}{Autenticazione utente}{Aggiunta utente}{Username}{Da riga di comando: l'amministratore aggiunge un utente con un determinato username utilizzando il comando apposito.}{L'utente viene aggiunto al sistema con una password temporanea che viene mostrata a video all'amministratore.}
+
 \end{center}
+
 \subsection{Requisiti non funzionali}
+\begin{center}
+    \srsnrtable{01}{Prestazioni}{Tempo di risposta}{L'interfaccia web deve rispondere in al massimo 5 secondi nell'80\% dei casi. Nel caso la connessione sia lenta deve mostrarne l'avanzamento.}
+    
+    \srsnrtable{02}{Sicurezza}{Protezione dati}{L'applicazione deve garantire la sicurezza dei dati che gestisce secondo normative internazionali.}
+    
+    \srsnrtable{03}{User experience}{Interfaccia grafica}{L'applicazione deve offrire l'interfaccia web in modo elegante e comprensibile anche da parte degli utenti meno esperti}
+    
+    \srsnrtable{04}{User experience}{Guida}{L'applicazione deve mettere a disposizione una guida nella interfaccia grafica in modo da facilitarne l'uso da parte degli utenti meno esperti}
+    
+    \srsnrtable{05}{Ecosistema}{Scalabilità}{L'applicazione deve essere in grado di sostenere un numero di elementi sempre crescente e gestire correttamente eventuali upgrade all'hardware del Server}
+\end{center}
 \section{Appendice}
-// design pattern
-// tabella con dimesione video
 \label{sec:appendice}
+\subsection{Tabelle dimensione stream registrati}
+    Di seguito vengono riportate alcune tabelle utili per stimare la grandezza totale su disco delle registrazioni dei dispositivi. Si rammenta che le misure sono a solo scopo illustrativo e dipendono da più fattori incalcolabili a priori; inoltre la lista di formati non è da considerarsi esaustiva. Nel caso di dati audiovisivi, è necessario sommare la dimensione al minuto dei rispettivi formati.
+
+
+    \bigskip
+    
+    \begin{tabular}{|m{\srsrtcoll}|m{\srsrtcoll}|}
+        \hline
+        \multicolumn{2}{|m{\srsrtmcol}|}{Audio} \\
+        \hline
+        Wav PCM 16 bit @44.1kHz stereo & 10 MB/min \\
+        \hline
+        Flac @44.1kHz stereo & 5 MB/min \\
+        \hline
+        mp3 @128kbps, 44.1kHz stereo & 1 MB/min \\
+        \hline
+        ogg @128kbps, 44.1kHz stereo & 1 MB/min \\
+        \hline
+    \end{tabular}
+
+    \bigskip
+    
+    \begin{tabular}{|m{\srsrtcoll}|m{\srsrtcoll}|}
+        \hline
+        \multicolumn{2}{|m{\srsrtmcol}|}{Video} \\
+        \hline
+        h.264 1920x1080 & 741 MB/min \\
+        \hline
+        h.264 1280x720 & 444 MB/min \\
+        \hline
+        h.264 720x486 & 230 MB/min \\
+        \hline
+    \end{tabular}
+
+    \bigskip
+
+    \begin{tabular}{|m{\srsrtcoll}|m{\srsrtcoll}|}
+        \hline
+        \multicolumn{2}{|m{\srsrtmcol}|}{Dati} \\
+        \hline
+        1 sample al millisecondo, 32 bit floating point & 240 kB/min \\
+        \hline
+        1 sample al secondo, 32 bit floating point & 240 B/min \\
+        \hline
+        1 sample al minuto, 32 bit floating point & 1 B/min \\
+        \hline
+        1 sample all'ora, 32 bit floating point & 1 B/ora \\
+        \hline
+    \end{tabular}
+
+\subsection{Esempio di sintassi da riga di comando}
+Aggiunta di un dispositivo generico:\\
+\lstinline{device add <name>}\\
+dove \textit{name} identifica il nome del nuovo dispositivo da aggiungere.\\[2em]
+Modifica campi di un dispositivo generico:\\
+\lstinline{device set <field> <value>}\\
+dove \textit{field} identifica il nome del campo da modificare e \textit{value} il valore da assegnare al campo.\\[2em]
+Eliminazione di un dispositivo generico:\\
+\lstinline{device delete <name>}\\
+dove \textit{name} identifica il nome del dispositivo da eliminare.\\[2em]
+Aggiunta, modifica, eliminazione di un gruppo:\\
+\lstinline{group add <name>}\\
+\lstinline{group set <field> <value>}\\
+\lstinline{group delete <name>}\\[2em]
+Aggiunta di un figlio ad un gruppo:\\
+\lstinline{group addchild <parentgroup> <name>}\\
+dove \textit{parentgroup} è il nome del gruppo a cui assegnare l'elemento con nome \textit{name}.\\
+
+\subsection{Diagrammi UML}
+\subsubsection{Use Case}
+\begin{figure}[H]
+    \caption{Use case diagram dell'applicazione}
+    \centering
+    \includegraphics[width=\textwidth]{2-usecase}
+    \label{fig:usecase}
+\end{figure}
+
+\subsection{Formato dati interfacce}
+\subsubsection{EI01}
+\label{sec:appendice:ei01}
+\textit{L'id ``00'' identifica la radice}
+\begin{lstlisting}{language=JSON}
+    {
+        {
+            "id" : "01",
+            "nome" : "dispositivo 1",
+            "configurazione" : {
+                ...
+            },
+            "padre" : "00"
+        },
+        {
+            "id" : "02",
+            "nome" : "gruppo 1",
+            "padre" : "00"
+        },
+        {
+            "id" : "03",
+            "nome" : "dispositivo 2",
+            "configurazione" : {
+                ...
+            },
+            "padre" : "02"
+        }
+    }
+\end{lstlisting}
 
 
 \end{document}
