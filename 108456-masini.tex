@@ -10,6 +10,7 @@
 \usepackage{comment}
 \usepackage{nameref}
 \usepackage{float}
+\usepackage{wrapfig}
 \hypersetup{
     colorlinks,
     citecolor=black,
@@ -25,6 +26,7 @@
   breaklines=true
 }
 
+\newcommand{\srswrapfigwidth}{0.44\textwidth}
 \newcommand{\srsdbname}{CouchDB}
 \newcommand{\srsavlibname}{ffmpeg}
 \newcommand{\srsnomeprogetto}{Progetto Senza Titolo}
@@ -310,6 +312,68 @@ dove \textit{parentgroup} è il nome del gruppo a cui assegnare l'elemento con n
     \includegraphics[width=\textwidth]{2-usecase}
     \label{fig:usecase}
 \end{figure}
+\subsubsection{Class diagram e design pattern}
+In figura \ref{fig:classes} si può osservare una vista di insieme delle relazioni tra le classi di una parte della applicazione. Il diagramma non è da considerarsi esaustivo (ad esempio non sono riportati tutti gli algoritmi di codifica/tutte le espressioni).
+
+In seguito verranno, poi, analizzate parti del diagramma per identificare e spiegare i vari pattern utilizzati.
+\begin{figure}[H]
+    \caption{Class diagram non esaustivo di una parte di applicazione}
+    \centering
+    \includegraphics[width=\textwidth]{3-classes}
+    \label{fig:classes}
+\end{figure}
+
+{%
+\setlength\intextsep{0pt}
+\begin{wrapfigure}{r}{\srswrapfigwidth}
+    \caption{Composite}
+    \centering
+    \includegraphics[width=\srswrapfigwidth]{3a-composite}
+    \label{fig:composite}
+\end{wrapfigure}
+\paragraph{Composite}
+La gerarchia dei gruppi e dei dispositivi è modellata utilizzando il design pattern ``Composite'', mostrato in figura \ref{fig:composite}. Esso prevede che gli elementi della gerachia vengano trattati allo stesso modo e li rappresenta sotto forma di albero, in linea con quanto richiesto nei requisiti. Si è deciso di tenere l'implementazione dei dispositivi separata dalla gerarchia utilizzando un ``Bridge pattern'', la cui discussione è oggetto del paragrafo seguente.
+
+\paragraph{Bridge}
+Per evitare che la gerarchia dei dispositivi cresca in modo incontrollabile e per promuovere la composizione sull'ereditarietà, si è deciso di utilizzare il design pattern ``Bridge'' (in figura \ref{fig:bridge}) per separare l'astrazione del dispositivo dalla sua effettiva implementazione. Nel diagramma vengono mostrate due possibili implementazioni del dispositivo, ovvero il ``sensore'' e il dispositivo ``audiovisivo''.
+\begin{figure}[H]
+    \caption{Bridge}
+    \centering
+    \includegraphics[width=\textwidth]{3b-bridge}
+    \label{fig:bridge}
+\end{figure}
+
+\setlength\intextsep{0pt}
+\begin{wrapfigure}{r}{\srswrapfigwidth}
+    \caption{Decorator}
+    \centering
+    \includegraphics[width=\srswrapfigwidth]{3c-decorator}
+    \label{fig:decorator}
+\end{wrapfigure}
+\paragraph{Decorator}
+Per gestire in modo flessibile le operazioni di codifica e decodifica degli stream dei dispositivi si è deciso di implementare il design pattern del ``Decorator'' (figura \ref{fig:decorator}) in quanto è anche il pattern utilizzato da Java per aggiungere funzionalità agli stream. Per questo stesso motivo il decorator viene utilizzato in giunzione al pattern ``Strategy'' (la discussione è nel paragrafo seguente), in modo da evitare di dover creare tante classi derivate dai decorator rischiando di dover ripetere del codice; ancora una volta si opta per la composizione invece che l'ereditarietà.
+
+\setlength\intextsep{0pt}
+\begin{wrapfigure}{r}{\srswrapfigwidth}
+    \caption{Strategy}
+    \centering
+    \includegraphics[width=\srswrapfigwidth]{3d-strategy}
+    \label{fig:strategy}
+\end{wrapfigure}
+\paragraph{Strategy}
+In figura \ref{fig:strategy} viene esposto l'utilizzo dello strategy pattern nella definizione degli algoritmi di decodifica (per la codifica si applica lo stesso pattern con le stesse considerazioni). Si noti l'esistenza di un algoritmo chiamato ``NoDecode'', il quale semplicemente restituisce lo stream non decodificato, ovvero non ne modifica i byte. Particolare attenzione è da riservare all'algoritmo ``DecodeByExpr'', il quale è utile per modellare la richiesta di applicare delle funzioni ai valori dei sensori; esso lavora in sinergia con il pattern ``Interpreter'' che viene analizzato nel prossimo paragrafo.
+
+\setlength\intextsep{0pt}
+\begin{wrapfigure}{r}{\srswrapfigwidth}
+    \caption{Interpreter}
+    \centering
+    \includegraphics[width=\srswrapfigwidth]{3e-interpreter}
+    \label{fig:interpreter}
+\end{wrapfigure}
+\paragraph{Interpreter}
+Come anticipato nel paragrafo precedente, l'applicazione di una funzione al valore di un sensore è implementata tramite il design pattern ``Interpreter''. Esso modella una grammatica tramite un albero e permette, quindi, di costruire una espressione matematica in modo ricorsivo. Nel diagramma di figura \ref{fig:interpreter} vengono mostrate alcune operazioni e alcuni operandi d'esempio come la somma, il prodotto, il logaritmo, la costante e il valore del sample stesso (che viene passato come ``Contesto'' del calcolo).
+%}
+
 
 \subsection{Formato dati interfacce}
 \subsubsection{EI01}
