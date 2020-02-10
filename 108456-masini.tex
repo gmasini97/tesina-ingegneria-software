@@ -100,19 +100,29 @@ Nel presente documento vengono spesso utilizzate abbreviazioni e acronimi comuni
 \begin{center}
     \begin{tabularx}{\linewidth}{|l X|}
         \hline
-        IOT & "Internet of Things", l'aggregazione in internet di dispositivi di poca capacità di calcolo destinati come controllori per determinati elettrodomestici o utilizzati come sensori (telecamere, termometri, microfoni etc). \\
+        Amministratore & Persona o ente responsabile del mantenimento del \textit{Server}. Spesso è anche un \textit{Client}.\\
         \hline
-        Ipcam & Telecamera, spesso utilizzata per videosorveglianza, che rende disponibile verso l'esterno una interfaccia ip per la gestione della stessa e la visione dello stream video tramite un protocollo comune (rtsp, udp etc). \\
-        \hline
-        Stream & Flusso di dati di vario tipo (audio, video, audio-video etc). \\
-        \hline
-        Server & Elaboratore che gestisce in modo centralizzato un insieme di dati e espone una interfaccia per interagire con più \textit{Client} tramite uno o più protocolli. \\
+        Browser Web & Programma destinato alla visualizzazione e navigazione di pagine web (ipertesti).\\
         \hline
         Client & Elaboratore che si collega ad un \textit{Server} per poter usufruire dei servizi da esso offerti. \\
         \hline
-        Utente & Persona o ente che tramite un \textit{Client} utilizza l'applicazione. \\
+        HTTP & \textit{Hypertext Trasfer Protocol}. Protocollo di trasferimento di documenti ipertestuali tramite web.\\
         \hline
-        Amministratore & Persona o ente responsabile del mantenimento del \textit{Server}. Spesso è anche un \textit{Client}.\\
+        IOT & "Internet of Things", l'aggregazione in internet di dispositivi di poca capacità di calcolo destinati come controllori per determinati elettrodomestici o utilizzati come sensori (telecamere, termometri, microfoni etc). \\
+        \hline
+        Java & Linguaggio orientato agli oggetti sviluppato da Sun Microsystems e successivamente acquisito da Oracle.\\
+        \hline
+        Java Virtual Machine (JVM) & Programma destinato all'interpretazione del bytecode di un programma Java.\\
+        \hline
+        JSON \cite{json} & Rappresentazione di dati eterogenei tramite oggetti \textit{Javascript}.\\
+        \hline
+        Server & Elaboratore che gestisce in modo centralizzato un insieme di dati e espone una interfaccia per interagire con più \textit{Client} tramite uno o più protocolli. \\
+        \hline
+        Sistema Operativo & Programma destinato alla gestione delle risorse e sotto-programmi di un elaboratore..\\
+        \hline
+        Stream & Flusso di dati di vario tipo (audio, video, audio-video etc). \\
+        \hline
+        Utente & Persona o ente che tramite un \textit{Client} utilizza l'applicazione. \\
         \hline
     \end{tabularx}
 \end{center}
@@ -129,14 +139,14 @@ Il progetto \textit{\srsnomeprogetto} è inteso come una applicazione \textit{st
 La natura di Java permette che la applicazione sia \textit{cross-platform} in modo da supportare ambienti Microsoft Windows, Linux e macOS. Anche se Java permette l'utilizzo della applicazione su piattaforme diverse, le uniche supportate ufficialmente dal progetto sono le 3 sopra citate con riferimento a macchine ad architettura \textit{x86} e \textit{amd64}.
 \end{comment}
 
-Il software utilizza un database \textit{nosql} per la memorizzazione dei dati degli utenti e delle risorse. Per quanto concerne l'elaborazione degli \textit{stream} audio e video, l'applicazione si avvale di una libreria esterna. L'applicazione necessita di almeno una interfaccia di rete installata e configurata correttamente sulla macchina \textit{Server} per la comunicazione coi dispositivi da monitorare, l'accesso da parte dei \textit{Client} e la connessione al servizio di database (nel caso questo sia installato su una macchina remota).
+Il software utilizza un database \textit{\srsdbname} per la memorizzazione dei dati degli utenti e delle risorse. Per quanto concerne l'elaborazione degli \textit{stream} audio e video, l'applicazione si avvale del progetto \textit{\srsavlibname}. L'applicazione necessita di almeno una interfaccia di rete installata e configurata correttamente sulla macchina \textit{Server} per la comunicazione coi dispositivi da monitorare, l'accesso da parte dei \textit{Client} e la connessione al servizio di database (nel caso questo sia installato su una macchina remota).
 
 Il \textit{Server} deve disporre di sufficiente spazio di archiviazione per la memorizzazione dei dati temporali dei vari dispositivi (ad esempio: registrazioni video, registrazioni audio, andamento dei sensori etc) per il periodo di mantenimento indicato dall'amministratore. Per completezza è disponibile anche l'archiviazione su server esterno via rete internet, anche se il suo utilizzo è sconsigliato per enti e privati che non dispongono di una banda larghissima in upload, la quale è necessaria per il trasporto di stream di grandi dimensioni come audio e video.
 
 Per aggregazioni di piccole dimensioni (il numero effettivo dei dispositivi audiovisivi dipende dal numero di elaborazioni intermedie e la risoluzione dei singoli dispositivi, in generale 15 è un buon compromesso) è sufficente disporre sul server di un processore \textit{multi core} per l'elaborazione intermedia degli stream audio-video (se necessaria). Per aggregazioni di grandi dimensioni è necessaria una scheda video Nvidia\textregistered che supporti l'elaborazione tramite CUDA e utilizzare la corretta versione di \srsavlibname.
 
 \subsection{Funzionalità del prodotto}
-La applicazione dovrà disporre di due interfacce separate, una accessibile tramite \textit{http} e una via riga di comando.
+L'applicazione dovrà disporre di due interfacce separate, una accessibile tramite \textit{http} e una via riga di comando.
 
 All'interfaccia http avranno accesso gli utenti abilitati a visionare in \textit{real time} lo stato dei vari dispositivi, nonché accedere alle registrazioni. Ogni utente deve essere prima autenticato con apposite credenziali per poterne identificare i permessi di visualizzazione.
 
@@ -148,7 +158,7 @@ Gli utenti con i giusti permessi e l'amministratore possono gestire la gerarchia
 
 Per ogni gruppo è sufficiente memorizzarne solamente il nome e una descrizione.
 
-Per ogni dispositivo invece è necessario memorizzarne il nome, una descrizione e il percorso dove salvare le registrazioni. Inoltre l'utente può specificare anche una operazione intermedia, che per dispositivi audio-video può essere una operazione di transcodifica (utilizzando quindi \srsavlibname) da un formato ad un altro oppure, nel caso di sensori con risultati numerici, una formula matematica (ad esempio il sensore restituisce i gradi su scala Celsius, ma l'utente vuole memorizzare i gradi in scala Kelvin).
+Per ogni dispositivo invece è necessario memorizzarne il nome, una descrizione, il percorso dove salvare le registrazioni e il periodo di salvataggio. Inoltre può essere specificata anche una operazione intermedia, che per dispositivi audio-video può essere una operazione di transcodifica (utilizzando quindi \srsavlibname) da un formato ad un altro oppure, nel caso di sensori con risultati numerici, una formula matematica (ad esempio il sensore restituisce i gradi su scala Celsius, ma l'utente vuole memorizzare i gradi in scala Kelvin).
 
 \begin{figure}[h]
     \caption{Esempio di una possibile gerarchia di dispositivi (nei rettangoli) e gruppi (negli ovali)}
@@ -304,7 +314,7 @@ Aggiunta di un figlio ad un gruppo:\\
 \lstinline{group addchild <parentgroup> <name>}\\
 dove \textit{parentgroup} è il nome del gruppo a cui assegnare l'elemento con nome \textit{name}.\\
 
-\subsection{Diagrammi UML}
+\subsection{Design}
 \subsubsection{Use Case}
 \begin{figure}[H]
     \caption{Use case diagram dell'applicazione}
@@ -373,13 +383,20 @@ In figura \ref{fig:strategy} viene esposto l'utilizzo dello strategy pattern nel
 \paragraph{Interpreter}
 Come anticipato nel paragrafo precedente, l'applicazione di una funzione al valore di un sensore è implementata tramite il design pattern ``Interpreter''. Esso modella una grammatica tramite un albero e permette, quindi, di costruire una espressione matematica in modo ricorsivo. Nel diagramma di figura \ref{fig:interpreter} vengono mostrate alcune operazioni e alcuni operandi d'esempio come la somma, il prodotto, il logaritmo, la costante e il valore del sample stesso (che viene passato come ``Contesto'' del calcolo).
 
-Di seguito viene mostrato un possibile sequence diagram per la risoluzione di una espressione da parte dell'interpreter; inoltre viene proposto in pseudo codice Java una possibile implementazione di alcune classi dello stesso.
+Di seguito viene mostrato un possibile object diagrame e un sequence diagram per la risoluzione di una espressione da parte dell'interpreter; inoltre viene proposto in pseudo codice Java una possibile implementazione di alcune classi dello stesso.
 
 \begin{figure}[H]
-    \caption{Object diagram di una espressione d'esempio e sequence diagram della risoluzione della espressione con valore di $x=100$}
+    \caption{Object diagram di una espressione d'esempio}
     \centering
-    \includegraphics[width=\textwidth]{4-interpreterexample}
-    \label{fig:interpreterexample}
+    \includegraphics[width=\textwidth]{4a-interpreterexample}
+    \label{fig:interpreterexamplea}
+\end{figure}
+
+\begin{figure}[H]
+    \caption{Sequence diagram della risoluzione dell'espressione di figura \ref{fig:interpreterexamplea} con valore di $x=100$}
+    \centering
+    \includegraphics[width=\textwidth]{4b-interpreterexample}
+    \label{fig:interpreterexampleb}
 \end{figure}
 %}
 
