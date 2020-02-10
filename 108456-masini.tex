@@ -185,7 +185,7 @@ In futuro può essere necessario supportare più protocolli e più dispositivi. 
 \subsection{Interfacce con l'esterno}
 
 \begin{center}
-    \srseitable{01}{Database}{Gerarchia dispositivi}{L'applicazione riceve in formato JSON la lista di dispositivi, gruppi e la loro organizzazione gerarchica.}{Consultare \nameref{sec:appendice:ei01} in appendice per un esempio di JSON}{Input}
+    \srseitable{01}{Database}{Gerarchia dispositivi}{L'applicazione riceve in formato JSON la lista di dispositivi, gruppi e la loro organizzazione gerarchica.}{JSON}{Input}
 
     \srseitable{02}{Dispositivi}{Stream dati}{L'applicazione riceve dai dispositivi attivi uno stream di dati.}{Il formato dati dipende dal protocollo utilizzato dal dispositivo}{Input}
 
@@ -312,7 +312,7 @@ dove \textit{parentgroup} è il nome del gruppo a cui assegnare l'elemento con n
     \includegraphics[width=\textwidth]{2-usecase}
     \label{fig:usecase}
 \end{figure}
-\subsubsection{Class diagram e design pattern}
+\subsubsection{Design pattern}
 In figura \ref{fig:classes} si può osservare una vista di insieme delle relazioni tra le classi di una parte della applicazione. Il diagramma non è da considerarsi esaustivo (ad esempio non sono riportati tutti gli algoritmi di codifica/tutte le espressioni).
 
 In seguito verranno, poi, analizzate parti del diagramma per identificare e spiegare i vari pattern utilizzati.
@@ -372,38 +372,93 @@ In figura \ref{fig:strategy} viene esposto l'utilizzo dello strategy pattern nel
 \end{wrapfigure}
 \paragraph{Interpreter}
 Come anticipato nel paragrafo precedente, l'applicazione di una funzione al valore di un sensore è implementata tramite il design pattern ``Interpreter''. Esso modella una grammatica tramite un albero e permette, quindi, di costruire una espressione matematica in modo ricorsivo. Nel diagramma di figura \ref{fig:interpreter} vengono mostrate alcune operazioni e alcuni operandi d'esempio come la somma, il prodotto, il logaritmo, la costante e il valore del sample stesso (che viene passato come ``Contesto'' del calcolo).
+
+Di seguito viene mostrato un possibile sequence diagram per la risoluzione di una espressione da parte dell'interpreter; inoltre viene proposto in pseudo codice Java una possibile implementazione di alcune classi dello stesso.
+
+\begin{figure}[H]
+    \caption{Object diagram di una espressione d'esempio e sequence diagram della risoluzione della espressione con valore di $x=100$}
+    \centering
+    \includegraphics[width=\textwidth]{4-interpreterexample}
+    \label{fig:interpreterexample}
+\end{figure}
 %}
 
+\begin{small}
+\begin{lstlisting}{language=Java}
+    public abstract class Expression {
+        public abstract float calculate(float x);
+    }
 
-\subsection{Formato dati interfacce}
-\subsubsection{EI01}
-\label{sec:appendice:ei01}
-\textit{L'id ``00'' identifica la radice}
-\begin{lstlisting}{language=JSON}
-    {
-        {
-            "id" : "01",
-            "nome" : "dispositivo 1",
-            "configurazione" : {
-                ...
-            },
-            "padre" : "00"
-        },
-        {
-            "id" : "02",
-            "nome" : "gruppo 1",
-            "padre" : "00"
-        },
-        {
-            "id" : "03",
-            "nome" : "dispositivo 2",
-            "configurazione" : {
-                ...
-            },
-            "padre" : "02"
+    public final class ConstantExpression extends Expression {
+        private final float value;
+        public ConstantExpression(float value) {
+            this.value = value;
+        }
+        public final float calculate(float x) {
+            return this.value;
+        }
+    }
+
+    public final class SampleValueExpression extends Expression {
+        public final float calculate(float x) {
+            return x;
+        }
+    }
+
+    public final class SumExpression extends Expression {
+        private final Expression add1;
+        private final Expression add2;
+        public SumExpression(Expression add1, Expression add2){
+            this.add1 = add1;
+            this.add2 = add2;
+        }
+        public final float calculate(float x){
+            final float a = this.add1.calculate(x);
+            final float b = this.add2.calculate(x);
+            return a + b;
+        }
+    }
+
+    public final class ProductExpression extends Expression {
+        private final Expression fac1;
+        private final Expression fac2;
+        public ProductExpression(Expression fac1, Expression fac2){
+            this.fac1 = fac1;
+            this.fac2 = fac2;
+        }
+        public final float calculate(float x){
+            final float a = this.fac1.calculate(x);
+            final float b = this.fac2.calculate(x);
+            return a * b;
+        }
+    }
+
+    public final class LogExpression extends Expression {
+        private final Expression base;
+        private final Expression arg;
+        public LogExpression(Expression base, Expression arg){
+            this.base = base;
+            this.arg = arg;
+        }
+        public final float calculate(float x){
+            final float a = this.arg.calculate(x);
+            final float b = this.base.calculate(x);
+            return (float)(Math.log(a) / Math.log(b));
         }
     }
 \end{lstlisting}
+\end{small}
 
+\paragraph{Altri pattern implementabili}
+I pattern sopra proposti sono un esempio dei tanti che si possono utilizzare per questa applicazione; ad esempio si potrebbe pensare di implementare la comunicazione coi dispositivi attraverso un ``Proxy'' in modo da gestire al meglio il traffico. Un altro pattern implementabile è il ``Command'' per gestire le operazioni di management della gerarchia. Non sono stati presentati pattern di creazione come ``Abstract Factory'', ``Singleton'' etc, ma hanno anch'essi una applicazione in questo progetto.
+
+\subsubsection{Activity Diagram}
+Viene riportato un activity diagram relativo alla modifica di un elemento nella gerarchia da parte di un utente che sta utilizzando l'interfaccia web.
+\begin{figure}[H]
+    \caption{Activity diagram relativo alla modifica}
+    \centering
+    \includegraphics[width=\textwidth]{5-activitydiagrammodifica}
+    \label{fig:activitydiagram}
+\end{figure}
 
 \end{document}
