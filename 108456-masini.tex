@@ -11,6 +11,7 @@
 \usepackage{nameref}
 \usepackage{float}
 \usepackage{wrapfig}
+\usepackage{longtable}
 \hypersetup{
     colorlinks,
     citecolor=black,
@@ -102,7 +103,7 @@ Il progetto nominato \textit{\srsnomeprogetto} si inserice nel contesto odierno 
 \subsection{Definizioni, acronimi, abbreviazioni}
 Nel presente documento vengono spesso utilizzate abbreviazioni e acronimi comuni nel contesto di sviluppo del progetto. Di seguito vengono riportate le interpretazioni delle suddette abbreviazioni:
 \begin{center}
-    \begin{tabularx}{\linewidth}{|l X|}
+    \begin{longtable}{|m{0.3\textwidth}| m{0.6\textwidth}|}
         \hline
         Amministratore & Persona o ente responsabile del mantenimento del \textit{Server}. Spesso è anche un \textit{Client}.\\
         \hline
@@ -128,7 +129,7 @@ Nel presente documento vengono spesso utilizzate abbreviazioni e acronimi comuni
         \hline
         Utente & Persona o ente che tramite un \textit{Client} utilizza l'applicazione. \\
         \hline
-    \end{tabularx}
+    \end{longtable}
 \end{center}
 \subsection{Fonti}
 \printbibliography[heading=none]
