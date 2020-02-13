@@ -369,7 +369,7 @@ In seguito verranno, poi, analizzate parti del diagramma per identificare e spie
     \label{fig:composite}
 \end{wrapfigure}
 \paragraph{Composite}
-La gerarchia dei gruppi e dei dispositivi è modellata utilizzando il design pattern ``Composite'', mostrato in figura \ref{fig:composite}. Esso prevede che gli elementi della gerachia vengano trattati allo stesso modo e li rappresenta sotto forma di albero, in linea con quanto richiesto nei requisiti. Si è deciso di tenere l'implementazione dei dispositivi separata dalla gerarchia utilizzando un ``Bridge pattern'', la cui discussione è oggetto del paragrafo seguente.
+La gerarchia dei gruppi e dei dispositivi è modellata utilizzando il design pattern ``Composite'', mostrato in figura \ref{fig:composite}. Esso prevede che gli elementi della gerarchia vengano trattati allo stesso modo e li rappresenta sotto forma di albero, in linea con quanto richiesto nei requisiti. Si è deciso di tenere l'implementazione dei dispositivi separata dalla gerarchia utilizzando un ``Bridge pattern'', la cui discussione è oggetto del paragrafo seguente.
 
 \paragraph{Bridge}
 Per evitare che la gerarchia dei dispositivi cresca in modo incontrollabile e per promuovere la composizione sull'ereditarietà, si è deciso di utilizzare il design pattern ``Bridge'' (in figura \ref{fig:bridge}) per separare l'astrazione del dispositivo dalla sua effettiva implementazione. Nel diagramma vengono mostrate due possibili implementazioni del dispositivo, ovvero il ``sensore'' e il dispositivo ``audiovisivo''.
@@ -410,7 +410,7 @@ In figura \ref{fig:strategy} viene esposto l'utilizzo dello strategy pattern nel
 \paragraph{Interpreter}
 Come anticipato nel paragrafo precedente, l'applicazione di una funzione al valore di un sensore è implementata tramite il design pattern ``Interpreter''. Esso modella una grammatica tramite un albero e permette, quindi, di costruire una espressione matematica in modo ricorsivo. Nel diagramma di figura \ref{fig:interpreter} vengono mostrate alcune operazioni e alcuni operandi d'esempio come la somma, il prodotto, il logaritmo, la costante e il valore del sample stesso (che viene passato come ``Contesto'' del calcolo).
 
-Di seguito viene mostrato un possibile object diagrame e un sequence diagram per la risoluzione di una espressione da parte dell'interpreter; inoltre viene proposto in pseudo codice Java una possibile implementazione di alcune classi dello stesso.
+Di seguito viene mostrato un possibile object diagram e un sequence diagram per la risoluzione di una espressione da parte dell'interpreter; inoltre viene proposto in pseudo codice Java una possibile implementazione di alcune classi dello stesso.
 
 \begin{figure}[H]
     \caption{Object diagram di una espressione d'esempio}
