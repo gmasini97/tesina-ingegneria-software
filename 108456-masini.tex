@@ -12,6 +12,8 @@
 \usepackage{float}
 \usepackage{wrapfig}
 \usepackage{longtable}
+\usepackage{fancyhdr}
+
 \hypersetup{
     colorlinks,
     citecolor=black,
@@ -26,6 +28,18 @@
   basicstyle=\small,
   breaklines=true
 }
+
+\pagestyle{fancy}
+\fancyfoot[C]{\tiny{Dichiaro che questo elaborato è frutto del mio personale lavoro, svolto sostanzialmente in maniera individuale e autonoma. Gabriele Masini.}\\
+\normalsize{\thepage}}
+ 
+%
+\fancypagestyle{plain}{%
+   \fancyhf{} 
+   \fancyfoot[C]{Dichiaro che questo elaborato è frutto del mio personale lavoro, svolto sostanzialmente in maniera individuale e autonoma. Gabriele Masini.}
+   \renewcommand{\headrulewidth}{0pt}
+}
+%
 
 \newcommand{\srsnomeprogetto}{GPMS}
 \newcommand{\srslongnomeprogetto}{General Purpose Monitoring System}
@@ -138,7 +152,7 @@ Il presente documento contiene le specifiche e le relative descrizioni dei requi
 Alla fine del documento, in \textit{\hyperref[sec:appendice]{Appendice}}, verranno inseriti diagrammi e grafici per integrare quanto detto nelle prossime sezioni, oltre a proporre un possibile utilizzo dei celeberrimi \textit{design pattern} \cite{designpatterns} per la programmazione ad oggetti del progetto.
 \section{Descrizione generale}
 \subsection{Inquadramento}
-Il progetto \textit{\srsnomeprogetto} è inteso come una applicazione \textit{stand alone} programmata in \textit{Java} che permetta di gestire una aggregazione di dispositivi atti a monitorare lo stato di uno o più ambienti (ad esempio: una abitazione, un ufficio, un parco etc). L'applicazione è un programma che viene eseguito su una macchina \textit{Server} ed essa espone all'esterno una interfaccia web (\textit{http}) per l'interazione con l'utente; inoltre il programma presenta una interfaccia sul server di tipo ``a riga di comando'' per la gestione da parte dell'amministratore.
+Il progetto \textit{\srsnomeprogetto} è inteso come una applicazione \textit{stand alone} programmata in \textit{Java} che permetta di gestire una aggregazione di dispositivi atti a monitorare lo stato di uno o più ambienti (ad esempio: una abitazione, un ufficio, un parco etc). L'applicazione è un programma che viene eseguito su una macchina \textit{Server} che espone all'esterno una interfaccia web (\textit{http}) per l'interazione con l'utente; inoltre il programma presenta una seconda interfaccia sul server di tipo ``a riga di comando'' per la gestione da parte dell'amministratore.
 
 \paragraph{Interfaccia sistema/utente}
 L'interfaccia web supporta monitor in 4:3 e 16:9 di almeno 1024x768 pixel (XGA) e presenta la gerarchia dei dispositivi e gruppi, i form di modifica della stessa e le visualizzazioni dei dati, ovvero forma d'onda e suono per dispositivi audio, video per i dispositivi video e grafici per i sensori (es. temperatura). I messaggi di errori nell'interfaccia web sono tenuti ad una lunghezza minima, specificando, quindi, un codice di errore e un messaggio umanamente comprensibile.
@@ -370,7 +384,7 @@ In seguito verranno, poi, analizzate parti del diagramma per identificare e spie
     \label{fig:composite}
 \end{wrapfigure}
 \paragraph{Composite}
-La gerarchia dei gruppi e dei dispositivi è modellata utilizzando il design pattern ``Composite'', mostrato in figura \ref{fig:composite}. Esso prevede che gli elementi della gerarchia vengano trattati allo stesso modo e li rappresenta sotto forma di albero, in linea con quanto richiesto nei requisiti. Si è deciso di tenere l'implementazione dei dispositivi separata dalla gerarchia utilizzando un ``Bridge pattern'', la cui discussione è oggetto del paragrafo seguente.
+La gerarchia dei gruppi e dei dispositivi è modellata utilizzando il design pattern ``Composite'', mostrato in figura \ref{fig:composite}. Esso prevede che gli elementi della gerarchia vengano trattati allo stesso modo e che siano rappresentati sotto forma di albero, in linea con quanto richiesto nei requisiti. Si è deciso di tenere l'implementazione dei dispositivi separata dalla gerarchia utilizzando un ``Bridge pattern'', la cui discussione è oggetto del paragrafo seguente.
 
 \paragraph{Bridge}
 Per evitare che la gerarchia dei dispositivi cresca in modo incontrollabile e per promuovere la composizione sull'ereditarietà, si è deciso di utilizzare il design pattern ``Bridge'' (in figura \ref{fig:bridge}) per separare l'astrazione del dispositivo dalla sua effettiva implementazione. Nel diagramma vengono mostrate due possibili implementazioni del dispositivo, ovvero il ``sensore'' e il dispositivo ``audiovisivo''.
@@ -389,7 +403,7 @@ Per evitare che la gerarchia dei dispositivi cresca in modo incontrollabile e pe
     \label{fig:decorator}
 \end{wrapfigure}
 \paragraph{Decorator}
-Per gestire in modo flessibile le operazioni di codifica e decodifica degli stream dei dispositivi si è deciso di implementare il design pattern del ``Decorator'' (figura \ref{fig:decorator}) in quanto è anche il pattern utilizzato da Java per aggiungere funzionalità agli stream. Per questo stesso motivo il decorator viene utilizzato in giunzione al pattern ``Strategy'' (la discussione è nel paragrafo seguente), in modo da evitare di dover creare tante classi derivate dai decorator rischiando di dover ripetere del codice; ancora una volta si opta per la composizione invece che l'ereditarietà.
+Per gestire in modo flessibile le operazioni di codifica e decodifica degli stream dei dispositivi si è deciso di implementare il design pattern del ``Decorator'' (figura \ref{fig:decorator}) in quanto è anche il pattern utilizzato da Java per aggiungere funzionalità agli stream. Il decorator viene utilizzato insieme al pattern ``Strategy'' (la discussione è nel paragrafo seguente), in modo da evitare di dover creare tante classi derivate dai decorator rischiando di dover ripetere del codice; ancora una volta si opta per la composizione invece che l'ereditarietà.
 
 \setlength\intextsep{0pt}
 \begin{wrapfigure}{r}{\srswrapfigwidth}
@@ -504,6 +518,15 @@ Viene riportato un activity diagram relativo alla modifica di un elemento nella 
     \centering
     \includegraphics[width=\textwidth]{5-activitydiagrammodifica}
     \label{fig:activitydiagram}
+\end{figure}
+
+\subsubsection{Mockup interfaccia web}
+In figura \ref{fig:mockup} si può apprezzare un esempio di mockup della interfaccia utente relativa alla gerarchia di dipositivi accessibile via interfaccia web.
+\begin{figure}[H]
+    \caption{Mockup interfaccia web}
+    \centering
+    \includegraphics[width=\textwidth]{6-mockup}
+    \label{fig:mockup}
 \end{figure}
 
 \end{document}
