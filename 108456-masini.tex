@@ -79,7 +79,7 @@
     \large \textit \srslongnomeprogetto \linebreak
     \large Specifica dei requisiti di progetto}
 \author{Gabriele Masini \#108456}
-\date{2019-12-10 rev.2020-02-10}
+\date{2019-12-10 rev.2020-02-13}
 
 \begin{document}
     
@@ -89,15 +89,16 @@
 \tableofcontents
 \newpage
 \pagenumbering{arabic}
-\section{Preambolo}
+\begin{comment}
 Grazie alla diffusione dell'\textit{Internet of Things} e con l'introduzione sul mercato di dispositivi come \textit{Amazon} \textit{Echo} si sono resi disponibili al consumatore una moltitudine di prodotti \textit{smart} tra cui telecamere ip, videocitofoni e sensori di vario genere atti a "digitalizzare" la propria esperienza casalinga.
 Che si critichi o no la cosa, questa diffusione di dispositivi rende disponibile all'uomo tecnologie multimediali a basso prezzo.
 È esattamente in questo contesto che si inserisce il progetto \textit{\srsnomeprogetto}, il quale si pone come obbiettivo la realizzazione di un sistema di gestione e registrazione dei propri dispositivi \textit{smart} per il monitoraggio di uno o più ambienti.
+\end{comment}
 \section{Introduzione}
-\subsection{Scopo}
+\subsection{Obiettivo}
 Il presente documento si riferisce alla definizione e descrizione delle informazioni necessarie per lo sviluppo del progetto \textit{\srsnomeprogetto} e interessa tutte le entità coinvolte nella progettazione, sviluppo e utilizzo dello stesso. Il documento viene redatto secondo le direttive espresse nel \textit{IEEE Recommended Paractice for Software Requirements Specifications} \cite{ieeestd830}, ovvero secondo lo standard \textit{IEEE Std 830-1998}.
-\subsection{Campo di applicazione}
-Il progetto nominato \textit{\srsnomeprogetto} si inserice nel contesto odierno di forte sviluppo di tecnologie relative all'\textit{Internet of Things} e si pone come obbiettivo la gestione dei dispositivi \textit{smart} multimediali per scopi di monitoraggio e videosorveglianza della propria abitazione, nonché di metodi comuni di registrazione dei sopra menzionati dispositivi. \textit{\srsnomeprogetto} non si interfaccerà utilizzando protocolli proprietari dei singoli produttori, ma utilizzerà protocolli comuni e di pubblico dominio di utilizzo, incluso, ma non limitato a, \textit{http, rtsp, udp}.
+\subsection{Campo d'applicazione}
+Il progetto nominato \textit{\srsnomeprogetto} si inserice nel contesto odierno di forte sviluppo di tecnologie relative all'\textit{Internet of Things} e si pone come obbiettivo la gestione dei dispositivi per scopi di monitoraggio e videosorveglianza, nonché di metodi comuni di registrazione dei sopra menzionati dispositivi, in modo da organizzare gerarchicamente la \textit{pool} di dispositivi installati in un ambiente e di conseguenza semplificare il lavoro di manutenzione e gestione.
 \subsection{Definizioni, acronimi, abbreviazioni}
 Nel presente documento vengono spesso utilizzate abbreviazioni e acronimi comuni nel contesto di sviluppo del progetto. Di seguito vengono riportate le interpretazioni delle suddette abbreviazioni:
 \begin{center}
@@ -117,7 +118,7 @@ Nel presente documento vengono spesso utilizzate abbreviazioni e acronimi comuni
         \hline
         Java Virtual Machine (JVM) & Programma destinato all'interpretazione del bytecode di un programma Java.\\
         \hline
-        JSON \cite{json} & Rappresentazione di dati eterogenei tramite oggetti \textit{Javascript}.\\
+        JSON \cite{json} & \textit{Javascript object notation}. Rappresentazione di dati eterogenei tramite oggetti \textit{Javascript}.\\
         \hline
         Server & Elaboratore che gestisce in modo centralizzato un insieme di dati e espone una interfaccia per interagire con più \textit{Client} tramite uno o più protocolli. \\
         \hline
@@ -129,35 +130,56 @@ Nel presente documento vengono spesso utilizzate abbreviazioni e acronimi comuni
         \hline
     \end{tabularx}
 \end{center}
-\subsection{Riferimenti}
+\subsection{Fonti}
 \printbibliography[heading=none]
-\subsection{Vista d'insieme del documento}
+\subsection{Struttura del documento}
 Il presente documento contiene le specifiche e le relative descrizioni dei requisiti del progetto \textit{\srsnomeprogetto}. Il progetto viene inquadrato secondo quanto citato in questa sezione e si prosegue nella sezione successiva a descriverne la prospettiva e le funzionalità, nonché la caratterizzazione dei potenziali utenti, dei vincoli e delle dipendenze. Nella sezione \textit{\hyperref[sec:specifica]{Specifica dei requisiti}}, verranno spiegate le interfacce con l'esterno e i requisiti funzionali e non.
 Alla fine del documento, in \textit{\hyperref[sec:appendice]{Appendice}}, verranno inseriti diagrammi e grafici per integrare quanto detto nelle prossime sezioni, oltre a proporre un possibile utilizzo dei celeberrimi \textit{design pattern} \cite{designpatterns} per la programmazione ad oggetti del progetto.
 \section{Descrizione generale}
-\subsection{Prospettiva del prodotto}
+\subsection{Inquadramento}
 Il progetto \textit{\srsnomeprogetto} è inteso come una applicazione \textit{stand alone} programmata in \textit{Java} che permetta di gestire una aggregazione di dispositivi atti a monitorare lo stato di uno o più ambienti (ad esempio: una abitazione, un ufficio, un parco etc). L'applicazione è un programma che viene eseguito su una macchina \textit{Server} ed essa espone all'esterno una interfaccia web (\textit{http}) per l'interazione con l'utente; inoltre il programma presenta una interfaccia sul server di tipo ``a riga di comando'' per la gestione da parte dell'amministratore.
+
+\paragraph{Interfaccia sistema/utente}
+L'interfaccia web supporta monitor in 4:3 e 16:9 di almeno 1024x768 pixel (XGA) e presenta la gerarchia dei dispositivi e gruppi, i form di modifica della stessa e le visualizzazioni dei dati, ovvero forma d'onda e suono per dispositivi audio, video per i dispositivi video e grafici per i sensori (es. temperatura). I messaggi di errori nell'interfaccia web sono tenuti ad una lunghezza minima, specificando, quindi, un codice di errore e un messaggio umanamente comprensibile.
+
+L'interfaccia a riga di comando, invece, non presenta nessun tipo di gerarchia ma viene tutto gestito tramite testo e comandi. In questo caso i messaggi di errore sono più lunghi in modo da facilitare il lavoro dell'amministratore.
 
 \begin{comment}
 La natura di Java permette che la applicazione sia \textit{cross-platform} in modo da supportare ambienti Microsoft Windows, Linux e macOS. Anche se Java permette l'utilizzo della applicazione su piattaforme diverse, le uniche supportate ufficialmente dal progetto sono le 3 sopra citate con riferimento a macchine ad architettura \textit{x86} e \textit{amd64}.
 \end{comment}
 
-Il software utilizza un database \textit{\srsdbname} per la memorizzazione dei dati degli utenti e delle risorse. Per quanto concerne l'elaborazione degli \textit{stream} audio e video, l'applicazione si avvale del progetto \textit{\srsavlibname}. L'applicazione necessita di almeno una interfaccia di rete installata e configurata correttamente sulla macchina \textit{Server} per la comunicazione coi dispositivi da monitorare, l'accesso da parte dei \textit{Client} e la connessione al servizio di database (nel caso questo sia installato su una macchina remota).
+\paragraph{Interfaccia hardware}
+Il servizio web utilizza la porta 80 per l'accesso da parte dei client web; la comunicazione coi dipositivi avviene tramite socket e la comunicazione viene iniziata dal server (per cui non sono necessarie porte conosciute aperte per la comunicazione coi dispositivi). Le macchine supportate sono quelle ad architettura x86 o amd64 con sistema operativo Microsoft Windows, Linux o macOS. L'applicazione necessita di almeno una interfaccia di rete installata e configurata correttamente sulla macchina \textit{Server} per la comunicazione coi dispositivi da monitorare e l'accesso da parte dei \textit{Client}.
 
+\paragraph{Interfaccia software}
+Il software utilizza un database \textit{\srsdbname} per la memorizzazione dei dati degli utenti e delle risorse, che può essere installato sulla macchina \textit{Server} stessa o su una macchina remota accessibile. Per quanto concerne l'elaborazione degli \textit{stream} audio e video, l'applicazione si avvale del progetto \textit{\srsavlibname}.
+
+\paragraph{Interfaccia di comunicazione}
+Il software fa largo utilizzo dello stack TCP/IP per quasi tutte le sue funzionalità. In particolare utilizza i protocolli \textit{http}, \textit{udp}, \textit{rtsp}.
+
+\paragraph{Vincoli relativi all'occupazione di memoria}
 Il \textit{Server} deve disporre di sufficiente spazio di archiviazione per la memorizzazione dei dati temporali dei vari dispositivi (ad esempio: registrazioni video, registrazioni audio, andamento dei sensori etc) per il periodo di mantenimento indicato dall'amministratore. Per completezza è disponibile anche l'archiviazione su server esterno via rete internet, anche se il suo utilizzo è sconsigliato per enti e privati che non dispongono di una banda larghissima in upload, la quale è necessaria per il trasporto di stream di grandi dimensioni come audio e video.
 
-Per aggregazioni di piccole dimensioni (il numero effettivo dei dispositivi audiovisivi dipende dal numero di elaborazioni intermedie e la risoluzione dei singoli dispositivi, in generale 15 è un buon compromesso) è sufficente disporre sul server di un processore \textit{multi core} per l'elaborazione intermedia degli stream audio-video (se necessaria). Per aggregazioni di grandi dimensioni è necessaria una scheda video Nvidia che supporti l'elaborazione tramite CUDA e utilizzare la corretta versione di \srsavlibname.
+Per aggregazioni di piccole dimensioni (il numero effettivo dei dispositivi audiovisivi dipende dal numero di elaborazioni intermedie e la risoluzione dei singoli dispositivi, in generale 15 è un buon compromesso) non è necessario preoccuparsi della dimensione della memoria centrale (circa 4GB di memoria sono sufficienti). In caso di aggregazioni grandi è necessario scegliere con cura la quantità di memoria centrale (più 4GB di memoria).
 
-\subsection{Funzionalità del prodotto}
+\paragraph{Operazioni}
+Al primo avvio è necessario inizializzare la password di amministratore, la quale verrà chiesta dal programma attraverso la riga di comando. Non sono previste operazioni di backup e recovery.
+
+\paragraph{Vincoli per installazione}
+È necessario che il server sia protetto da accessi indesiderati (sia per quanto riguarda la riga di comando sia per quanto riguarda l'accesso al database e al filesystem con le registrazioni).
+
+\subsection{Macro funzionalità}
 L'applicazione dovrà disporre di due interfacce separate, una accessibile tramite \textit{http} e una via riga di comando.
 
-All'interfaccia http avranno accesso gli utenti abilitati a visionare in \textit{real time} lo stato dei vari dispositivi, nonché accedere alle registrazioni. Ogni utente deve essere prima autenticato con apposite credenziali per poterne identificare i permessi di visualizzazione.
+All'interfaccia http avranno accesso gli utenti abilitati a visionare in \textit{real time} lo stato dei vari dispositivi, nonché accedere alle registrazioni. Ogni utente deve essere prima autenticato con apposite credenziali per poterne identificare i permessi di visualizzazione e gestione della gerarchia.
 
-L'interfaccia via riga di comando è riservata al solo amministratore del sistema. Anch'essa richiede l'inserimento di una password d'amministratore per evitare eventuali manomissioni.
+L'interfaccia via riga di comando è riservata al solo amministratore del sistema. Anch'essa richiede l'inserimento di una password d'amministratore per evitare eventuali manomissioni. L'amministratore ha tutti i permessi di gestione e inoltre è l'unico utente che può gestire l'aggiunta, modifica ed eliminazione di utenti.
 
-La gerarchia dei dispositivi è gestita sotto forma di albero, ovvero ogni dispositivo può essere aggregato in un gruppo che può a sua volta appartenere ad un'altro gruppo. Non sono ammesse relazioni ricorsive tra gruppi. Tutti i gruppi/dispositivi sono figli (diretti o indiretti) di un gruppo radice. In \hyperref[fig:gerarchia]{figura \ref{fig:gerarchia}} si può osservare un esempio di organizzazione gerarchica di dispositivi e gruppi.
+Gli utenti con i giusti permessi di gestione della gerarchia possono operare spostamenti, rinomine, cancellazioni e aggiunte di dispositivi e gruppi attraverso l'interfaccia web.
 
-Gli utenti con i giusti permessi e l'amministratore possono gestire la gerarchia, operando spostamenti, rinomine, cancellazioni e aggiunte di dispositivi e gruppi.
+L'amministratore può effettuare tali operazioni anche tramite la riga di comando.
+
+La gerarchia dei dispositivi è gestita sotto forma di albero, ovvero ogni dispositivo può essere aggregato in un gruppo che può a sua volta appartenere ad un'altro gruppo. Non sono ammesse relazioni ricorsive tra gruppi. Tutti i gruppi/dispositivi sono figli (diretti o indiretti) di un gruppo radice. In figura \ref{fig:gerarchia} si può osservare un esempio di organizzazione gerarchica di dispositivi e gruppi.
 
 Per ogni gruppo è sufficiente memorizzarne solamente il nome e una descrizione.
 
@@ -171,7 +193,7 @@ Per ogni dispositivo invece è necessario memorizzarne il nome, una descrizione,
 \end{figure}
 
 \subsection{Caratteristiche degli utenti}
-Gli utenti che si interfacceranno con l'applicazione sono l'amministratore e gli utenti generali. L'amministratore ha completo accesso su tutte le parti della applicazione (sia nell'interfaccia web, sia nell'interfaccia a riga di comando). Gli utenti generali avranno dei determinati permessi a loro assegnati per l'utilizzo dell'interfaccia web.
+Gli utenti che si interfacciano con l'applicazione sono l'amministratore e gli utenti generali. L'amministratore ha completo accesso su tutte le parti della applicazione (sia nell'interfaccia web, sia nell'interfaccia a riga di comando). Gli utenti generali avranno dei determinati permessi a loro assegnati per l'utilizzo dell'interfaccia web.
 
 L'utente amministratore deve avere un ottimo grado di dimestichezza con la macchina \textit{Server} su cui configura l'applicazione, sia dal punto di vista del sistema operativo, sia in campo di reti e telecomunicazione, sia nell'ottica di configurazione di programmi via riga di comando, sia, infine, in campo di formati multimediali audio-video. È sufficiente un diploma di tecnico/perito informatico; è consigliata una laurea in campo informatico.
 
@@ -183,20 +205,22 @@ L'applicazione è limitata e/o vincolata nel suo funzionamento da:
     \item Il numero di thread o core del processore e/o la potenza di calcolo della GPU.
     \item Le funzioni e i metodi che \textit{\srsavlibname} mette a disposizione.
     \item La banda massima supportata dalla connessione ad internet, nonché la banda massima della rete locale.
-    \item Le politiche di privacy necessarie per memorizzare dati basilari di utenti (e-mail, username e password).
+    \item Le politiche di privacy necessarie per memorizzare dati non sensibili di utenti (e-mail, username e password).
+    \item Le politiche di privacy necessarie per memorizzare dati audiovisivi di persone.
     \item La presenza sul server di una \textit{Java Virtual Machine}.
     \item La presenza sul client di un \textit{browser web}
 \end{itemize}
 \subsection{Presupposti e dipendenze}
 \label{sec:dipendenze}
 Il progetto dipende dai progetti \textit{\srsdbname} e \textit{\srsavlibname}, utilizza il protocollo ip e i protocolli che si appoggiano ad esso (http, udp, rtsp etc) e supporta solo macchine \textit{x86} e \textit{amd64} con sistema operativo Microsoft Windows, Linux, macOS. I browser supportati dall'interfaccia web sono Microsoft Edge, Apple Safari, Mozilla Firefox, Google Chrome (e suoi derivati, es: Chromium, Opera etc).
-Queste dipendenze possono portare al cambiamento del presente documento e, di conseguenza, all'applicazione.
-\subsection{Requisiti futuri}
+L'applicazione risente inoltre delle normative di privacy internazionali.
+Queste dipendenze possono portare al cambiamento del presente documento.
+\subsection{Requisiti da analizzare in futuro}
 In futuro può essere necessario supportare più protocolli e più dispositivi. Può essere utile implementare una comunicazione tra l'applicazione e sistemi di \textit{smart home} come Amazon Echo.
 \section{Specifica dei requisiti}
 \label{sec:specifica}
-\subsection{Interfacce con l'esterno}
-
+\subsection{Requisiti dell'interfaccia esterna}
+Vengono riportate le principali interfacce di input/output, utilizzando un formato simile a quanto verrà utilizzato per i requisiti funzionali e non. (EI$xx$ = External Interface numero $xx$)
 \begin{center}
     \srseitable{01}{Database}{Gerarchia dispositivi}{L'applicazione riceve in formato JSON la lista di dispositivi, gruppi e la loro organizzazione gerarchica.}{JSON}{Input}
 
@@ -227,11 +251,11 @@ In futuro può essere necessario supportare più protocolli e più dispositivi. 
     \srsfrtable{04}{Gestione elementi}{Assegnazione gruppo}{Elemento figlio e gruppo padre}{Da web: l'utente trascina l'\textit{handle} presente sopra l'elemento figlio e lo rilascia sul gruppo padre.\newline
     Da riga di comando: l'utente scrive il comando apposito per assegnare un elemento figlio ad un gruppo padre.}{L'elemento padre dell'elemento figlio viene aggiornato e si aggiorna anche la vista sul web.}
 
-    \srsfrtable{06}{Gestione Elementi}{Visualizzazione}{Dispositivo da visualizzare}{Da web: l'utente clicca due volte sull'elemento da visualizzare.}{I dati vengono visualizzati.}
+    \srsfrtable{05}{Gestione Elementi}{Visualizzazione}{Dispositivo da visualizzare}{Da web: l'utente clicca due volte sull'elemento da visualizzare.}{I dati vengono visualizzati.}
 
-    \srsfrtable{07}{Autenticazione utente}{Login}{Username e password}{Da web: l'utente clicca sul bottone ``login'', un popup chiede username e password, l'utente sceglie se annullare l'operazione o confermarla.}{Se username e password corretti l'utente accede al sistema.}
+    \srsfrtable{06}{Utenti}{Login}{Username e password}{Da web: l'utente clicca sul bottone ``login'', un popup chiede username e password, l'utente sceglie se annullare l'operazione o confermarla.}{Se username e password corretti l'utente accede al sistema.}
 
-    \srsfrtable{08}{Autenticazione utente}{Aggiunta utente}{Username}{Da riga di comando: l'amministratore aggiunge un utente con un determinato username utilizzando il comando apposito.}{L'utente viene aggiunto al sistema con una password temporanea che viene mostrata a video all'amministratore.}
+    \srsfrtable{07}{Utenti}{Aggiunta utente}{Username}{Da riga di comando: l'amministratore aggiunge un utente con un determinato username utilizzando il comando apposito.}{L'utente viene aggiunto al sistema con una password temporanea che viene mostrata a video all'amministratore.}
 
 \end{center}
 
@@ -239,7 +263,7 @@ In futuro può essere necessario supportare più protocolli e più dispositivi. 
 \begin{center}
     \srsnrtable{01}{Prestazioni}{Tempo di risposta}{L'interfaccia web deve rispondere in al massimo 5 secondi nell'80\% dei casi. Nel caso la connessione sia lenta deve mostrarne l'avanzamento.}
     
-    \srsnrtable{02}{Sicurezza}{Protezione dati}{L'applicazione deve garantire la sicurezza dei dati che gestisce secondo normative internazionali.}
+    \srsnrtable{02}{Sicurezza}{Protezione dati}{L'applicazione deve garantire la sicurezza dei dati che gestisce secondo normative internazionali, con particolare riferimento al GDPR \cite{gdpr}}
     
     \srsnrtable{03}{User experience}{Interfaccia grafica}{L'applicazione deve offrire l'interfaccia web in modo elegante e comprensibile anche da parte degli utenti meno esperti}
     
